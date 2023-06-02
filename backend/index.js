@@ -6,21 +6,43 @@ const User=require('./mongoosemodel/user');
 const{createToken,verifyToken}=require('./authentication/auth');
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://chirag=:12345@cluster0.dkvr5me.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://chirag:nepal@cluster0.dkvr5me.mongodb.net/tradify?retryWrites=true&w=majority";
+const dbName = "tradify";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
 });
+const db = client.db(dbName);
 async function run() {
- 
+  
+    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    // Send a ping to confirm a successful connection
+   
   
 }
 run().then(e=>console.log("connected to db")).catch(console.dir);
+
+// const { MongoClient, ServerApiVersion } = require('mongodb');
+// const url= "mongodb+srv://chirag=:nepal@cluster0.dkvr5me.mongodb.net/?retryWrites=true&w=majority";
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+// const client = new MongoClient(uri, {
+//   serverApi: {
+//     version: ServerApiVersion.v1,
+//     strict: true,
+//     deprecationErrors: true,
+//   }
+// });
+// async function run() {
+ 
+//     await mongoose.connect(url);
+  
+// }
+// run().then(e=>console.log("connected to db")).catch(console.dir);
 
 // async function main() {
 //     await mongoose.connect('mongodb://127.0.0.1:27017/tradify');
@@ -42,7 +64,8 @@ app.get('/getallitems',verifyToken,async(req,res)=>{
 
 app.post('/login',async(req,res)=>{
     const{Username,password}=req.body;
-    const founduser=await User.findOne({Username:Username});
+    const col=db.collection("User");
+    const founduser=await col.findOne({Username:Username});
     if(founduser){
         const hash=founduser.password;  
         const found=await bcrypt.compare(password,hash);
@@ -60,11 +83,12 @@ app.post('/login',async(req,res)=>{
 })
 app.post('/register',async(req,res)=>{
     const{Name,username,password,phoneNo,regNo}=req.body;
-    // console.log(req.body);
+    console.log(req.body);
+    const col=db.collection("User");
     const hash=await bcrypt.hash(password, 10);
     if(hash){
-        const newUser=new User({username:username,password:hash,Name:Name,phoneNo:phoneNo,regNo:regNo});
-        const saved=await newUser.save();
+        const saved=await col.insertOne({username:username,password:hash,Name:Name,phoneNo:phoneNo,regNo:regNo});
+        // const saved=await newUser.save();
         console.log(saved);
         if(saved){
             return res.send({success:"successfully registered"});
