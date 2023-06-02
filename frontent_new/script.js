@@ -53,7 +53,7 @@ registrationForm.addEventListener("submit", (event) => {
     password,
     phoneno,
     Name,
-    registerNumber
+    regNo
   };
 
   console.log(user);
