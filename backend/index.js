@@ -6,6 +6,8 @@ const cors=require('cors');
 const User=require('./mongoosemodel/user');
 const{createToken,verifyToken}=require('./authentication/auth');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const multer=require('multer');
+const upload = multer({ dest: "uploads/" });
 const uri = "mongodb+srv://chirag:nepal@cluster0.dkvr5me.mongodb.net/tradify?retryWrites=true&w=majority";
 const dbName = "tradify";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -54,12 +56,15 @@ run().then(e=>console.log("connected to db")).catch(console.dir);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
+
 app.get('/',(req,res)=>{
     res.send("hello world");    
 })
 
-app.post('/addsellitem',verifyToken,async(req,res)=>{
-    const{Name,Description,imageUrl,phoneno}=req.body;
+app.post('/addsellitem',upload.single("myFile"),async(req,res)=>{
+    const{Name,Description,filename,phoneno}=req.body;
+    console.log(filename);
+    res.send("heelo");
 
 })
 app.get('/getsellitems',verifyToken,async(req,res)=>{
@@ -90,12 +95,12 @@ app.post('/login',async(req,res)=>{
 })
 
 app.post('/register',async(req,res)=>{
-    const{Name,username,password,phoneNo,regNo}=req.body;
+    const{Name,username,password,phoneno,regNo}=req.body;
     console.log(req.body);
     const col=db.collection("User");
     const hash=await bcrypt.hash(password, 10);
     if(hash){
-        const saved=await col.insertOne({username:username,password:hash,Name:Name,phoneNo:phoneNo,regNo:regNo});
+        const saved=await col.insertOne({username:username,password:hash,Name:Name,phoneno:phoneno,regNo:regNo});
         // const saved=await newUser.save();
         console.log(saved);
         if(saved){
@@ -111,7 +116,7 @@ app.post('/register',async(req,res)=>{
     }
 })
 
-app.delete('/deletegift/:id',verifyToken,async(req,res)=>{
+app.delete('/deletesellitem/:id',verifyToken,async(req,res)=>{
     const{id}=req.params;
     const col=db.collection("Items");
     const del=await col.findByIdAndDelete(id);
