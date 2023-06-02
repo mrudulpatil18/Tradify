@@ -14,6 +14,9 @@ const Giftschema=new Schema({
     },
     Price:{
         type:Number
+    },
+    PhoneNo:{
+        type:String
     }
 })
 const Item=mongoose.model('Item',Giftschema);

@@ -4,7 +4,6 @@ const mongoose=require('mongoose');
 const bcrypt=require('bcrypt');
 const User=require('./mongoosemodel/user');
 const{createToken,verifyToken}=require('./authentication/auth');
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://chirag:nepal@cluster0.dkvr5me.mongodb.net/tradify?retryWrites=true&w=majority";
 const dbName = "tradify";
@@ -64,7 +63,7 @@ app.get('/getallitems',verifyToken,async(req,res)=>{
 
 app.post('/login',async(req,res)=>{
     const{Username,password}=req.body;
-    const col=db.collection("User");
+    const col=db.collection("User");   
     const founduser=await col.findOne({Username:Username});
     if(founduser){
         const hash=founduser.password;  
@@ -81,6 +80,7 @@ app.post('/login',async(req,res)=>{
         res.status(400).json({error:"email doesn't exist"});
     }
 })
+
 app.post('/register',async(req,res)=>{
     const{Name,username,password,phoneNo,regNo}=req.body;
     console.log(req.body);
@@ -101,6 +101,20 @@ app.post('/register',async(req,res)=>{
 
         return res.status(400).send({error:"there is some error"});
     }
+})
+app.get('/getallitems',verifyToken,async(req,res)=>{
+    const col=db.collection("Items");
+    const allitems=await col.find({User:req.user});
+    res.send(allitems);
+})
+app.delete('/deletegift/:id',verifyToken,async(req,res)=>{
+    const{id}=req.params;
+    const col=db.collection("Items");
+    const del=await col.findByIdAndDelete(id);
+    if(del){
+        return res.send({success:"successfully deleted"})
+    }
+    return res.status(400).send({msg:"error"});
 })
 
 
