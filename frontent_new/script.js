@@ -41,20 +41,22 @@ registrationForm.addEventListener("submit", (event) => {
   event.preventDefault(); // Prevent the default form submission
 
   // Get the form input values
-  const username = document.querySelector("#registration-form input[name='username']").value;
-  const password = document.querySelector("#registration-form input[name='password']").value;
-  const phoneNumber = document.querySelector("#registration-form input[name='phoneNumber']").value;
-  const name = document.querySelector("#registration-form input[name='name']").value;
-  const registerNumber = document.querySelector("#registration-form input[name='registerNumber']").value;
+  const username = document.querySelector("#registration-form #username").value;
+  const password = document.querySelector("#registration-form #password").value;
+  const phoneno = document.querySelector("#registration-form #phoneNo").value;
+  const Name = document.querySelector("#registration-form #name").value;
+  const regNo = document.querySelector("#registration-form #regNo").value;
 
 
   const user = {
     username,
     password,
-    phoneNumber,
-    name,
+    phoneno,
+    Name,
     registerNumber
   };
+
+  console.log(user);
 
   fetch("http://localhost:3000/register", {
     method: "POST",
@@ -70,9 +72,9 @@ registrationForm.addEventListener("submit", (event) => {
       console.log(data);
       // You can perform any additional actions here, such as showing a success message or redirecting to another page
     })
-    .catch(error => {
-      // Handle any errors that occurred during the request
-      console.error(error);
-      // You can display an error message to the user or perform any other error handling logic
-    });
+     .catch(error => {
+       // Handle any errors that occurred during the request
+       console.error(error);
+       // You can display an error message to the user or perform any other error handling logic
+     });
 });
