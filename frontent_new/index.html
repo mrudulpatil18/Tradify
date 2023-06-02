@@ -31,11 +31,11 @@
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
                     <input type="email" id="name" required>
-                    <label>Email</label>
+                    <label>Username</label>
                 </div>
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></ion-icon></span>
-                    <input type="password" required>
+                    <input type="password" id="Lpassword" required>
                     <label>Password</label>
                 </div>
                 <div class="remember-forgot">
@@ -71,7 +71,7 @@
 
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="tel" id="phoneNo" required>
+                    <input type="tel" id="phoneNo" required pattern="^[6-9]\d{9}$">
                     <label>Phone Number</label>
                 </div>
 
@@ -83,7 +83,7 @@
 
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="text" id="regNo" required>
+                    <input type="text" id="regNo" required pattern="\d{2}[A-Za-z]{3}\d{4}">
                     <label>Register Number</label>
                 </div>
 
