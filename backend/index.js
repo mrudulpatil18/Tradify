@@ -95,6 +95,10 @@ app.post('/register',async(req,res)=>{
     const col=db.collection("User");
     const hash=await bcrypt.hash(password, 10);
     if(hash){
+        const finddupuser=await col.findOne({username:username});
+        if(finddupuser){
+            return res.status(400).send({error:"there is some error"});
+        }
         const saved=await col.insertOne({username:username,password:hash,Name:Name,phoneno:phoneno,regNo:regNo});
         // const saved=await newUser.save();
         console.log(saved);
