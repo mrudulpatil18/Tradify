@@ -1,6 +1,9 @@
 const mongoose=require('mongoose');
 const {Schema}=mongoose;
 const loginschema=new Schema({
+    Name:{
+        type:String
+    },
     username:{
         type:String
     },
@@ -11,8 +14,8 @@ const loginschema=new Schema({
         type:String
     },
     regNo:{
-        type:Strimg
+        type:String
     }
 })
-const Login=mongoose.model('Login',loginschema);
-module.exports=Login;
+const User=mongoose.model('User',loginschema);
+module.exports=User;
