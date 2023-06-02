@@ -2,6 +2,7 @@ const express=require('express');
 const app=express();
 const mongoose=require('mongoose');
 const bcrypt=require('bcrypt');
+const cors=require('cors');
 const User=require('./mongoosemodel/user');
 const{createToken,verifyToken}=require('./authentication/auth');
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -52,14 +53,21 @@ run().then(e=>console.log("connected to db")).catch(console.dir);
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
+app.use(cors());
 app.get('/',(req,res)=>{
     res.send("hello world");    
 })
-app.get('/getallitems',verifyToken,async(req,res)=>{
-    const allgifts=await Items.find({User:req.user});
-    res.send(allgifts);
+
+app.post('/addsellitem',verifyToken,async(req,res)=>{
+    const{Name,Description,imageUrl,phoneno}=req.body;
+
 })
+app.get('/getsellitems',verifyToken,async(req,res)=>{
+    const col=db.collection("Item");
+    const allitems=await col.findall({User:req.user});
+    res.send(allitems);
+})
+
 
 app.post('/login',async(req,res)=>{
     const{Username,password}=req.body;
@@ -102,11 +110,7 @@ app.post('/register',async(req,res)=>{
         return res.status(400).send({error:"there is some error"});
     }
 })
-app.get('/getallitems',verifyToken,async(req,res)=>{
-    const col=db.collection("Items");
-    const allitems=await col.find({User:req.user});
-    res.send(allitems);
-})
+
 app.delete('/deletegift/:id',verifyToken,async(req,res)=>{
     const{id}=req.params;
     const col=db.collection("Items");
